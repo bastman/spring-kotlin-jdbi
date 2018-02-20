@@ -52,6 +52,11 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
+configurations {
+    all*.exclude group: "org.hibernate", module: "hibernate-entitymanager"
+   // all*.exclude group: "org.apache.tomcat", module: "tomcat-jdbc"
+}
+
 dependencies {
     // kotlin
     compile("org.jetbrains.kotlin:kotlin-stdlib-jre8")
@@ -84,7 +89,7 @@ dependencies {
     // jdbi
     //compile "org.jdbi:jdbi:${jdbiVersion}"
 
-
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
     // https://mvnrepository.com/artifact/org.jdbi/jdbi3-spring
     compile group: 'org.jdbi', name: 'jdbi3-spring', version: '3.0.0-alpha7'
 // https://mvnrepository.com/artifact/org.jdbi/jdbi3-jpa

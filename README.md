@@ -21,8 +21,9 @@ playground for spring-boot, kotlin , jdbi
 
 ## This example project is based on ...
 - https://github.com/making/spring-boot-db-samples
-
-
+- https://www.sitepoint.com/combining-spring-boot-and-jdbi/
+- https://github.com/dhagge/spring-boot-jdbi-seed
+- https://github.com/oldpatricka/spring-boot-jdbi
 
 ## Whats wrong with orm, jpa, hibernate and in-memory h2-db these days ?
 
