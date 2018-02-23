@@ -22,7 +22,7 @@ data class Tweet(
 
 interface TweetDaoOps {
     @SqlUpdate("""
-        insert into tweet
+        insert into $TABLE_TWEET
         (id, version, created_at, updated_at, message, comment)
         values
         (:tweet.id, :tweet.version, :tweet.createdAt, :tweet.modifiedAt, :tweet.message, :tweet.comment)
@@ -30,14 +30,18 @@ interface TweetDaoOps {
     )
     fun create(tweet: Tweet): Number
 
-    @SqlQuery("SELECT * FROM tweet WHERE id = :id")
+    @SqlQuery("SELECT * FROM $TABLE_TWEET WHERE id = :id")
     operator fun get(@Bind("id") id: UUID): Tweet?
 
-    @SqlQuery("SELECT * FROM tweet")
+    @SqlQuery("SELECT * FROM $TABLE_TWEET")
     fun findAll(): List<Tweet>
 
-    @SqlQuery("SELECT * FROM tweet where id = any(:ids) order by id")
+    @SqlQuery("SELECT * FROM $TABLE_TWEET where id = any(:ids) order by id")
     fun findByIdList(ids:List<UUID>): List<Tweet>
+
+    companion object {
+        const val TABLE_TWEET:String="tweet"
+    }
 }
 
 //@Repository
