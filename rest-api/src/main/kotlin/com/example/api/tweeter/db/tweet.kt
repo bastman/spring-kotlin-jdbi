@@ -35,6 +35,9 @@ interface TweetDaoOps {
 
     @SqlQuery("SELECT * FROM tweet")
     fun findAll(): List<Tweet>
+
+    @SqlQuery("SELECT * FROM tweet where id = any(:ids) order by id")
+    fun findByIdList(ids:List<UUID>): List<Tweet>
 }
 
 //@Repository
@@ -50,4 +53,5 @@ class TweetDao(jdbi: Jdbi) {
     operator fun get(id: UUID): Tweet? = ops[id]
     fun requireOneById(id: UUID): Tweet = ops[id] ?: throw EntityNotFoundException("Tweet Not Found (id=$id)")
     fun findAll() = ops.findAll()
+    fun findByIdList(ids: List<UUID>) = ops.findByIdList(ids)
 }

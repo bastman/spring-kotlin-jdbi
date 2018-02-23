@@ -10,7 +10,12 @@ import java.util.*
 class TweeterApiController(private val dao: TweetDao) {
 
     @GetMapping("/api/tweeter")
-    fun findAll(): List<TweetDto> = dao.findAll().map { it.toTweetDto() }
+    fun findAll(): List<TweetDto> =
+            dao.findAll().map { it.toTweetDto() }
+
+    @PostMapping("/api/tweeter/find-by-ids")
+    fun findByIdList(@RequestBody req:FindByIdsRequest): List<TweetDto> =
+            dao.findByIdList(req.ids).map { it.toTweetDto() }
 
     @GetMapping("/api/tweeter/{id}")
     fun getOne(@PathVariable id: UUID): TweetDto = dao.requireOneById(id).toTweetDto()
@@ -27,6 +32,7 @@ class TweeterApiController(private val dao: TweetDao) {
 }
 
 data class CreateTweetRequest(val message: String, val comment: String?)
+data class FindByIdsRequest(val ids:List<UUID>)
 data class TweetDto(
         val id: UUID, val version: Int, val createdAt: Instant, val modifiedAt: Instant,
         val message: String, val comment: String?
