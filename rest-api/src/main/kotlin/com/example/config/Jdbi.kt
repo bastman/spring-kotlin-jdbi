@@ -30,15 +30,17 @@ class JdbiConfig(private val dataSource: DataSource) {
 
     @Bean
     fun jdbi(): Jdbi {
-        return Jdbi.create(dataSource)
+        return Jdbi.create(dataSource).installPlugins()
     }
 
+    /*
     @Bean
     fun jdbiFactory(): JdbiFactoryBean {
         return JdbiFactoryBean()
                 //.setDataSource(DriverManagerDataSource())
                 .setDataSource(dataSource)
     }
+    */
 
     /*
     @Bean
