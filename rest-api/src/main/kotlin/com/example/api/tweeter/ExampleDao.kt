@@ -7,6 +7,7 @@ import org.jdbi.v3.sqlobject.customizer.Bind
 import org.jdbi.v3.sqlobject.customizer.BindBean
 import org.jdbi.v3.sqlobject.statement.SqlQuery
 import org.jdbi.v3.sqlobject.statement.SqlUpdate
+import org.springframework.stereotype.Component
 import java.time.Instant
 import java.util.*
 import javax.annotation.PostConstruct
@@ -32,6 +33,7 @@ interface ExampleDaoOps {
 }
 
 //@Repository
+@Component
 class ExampleDao(private val jdbi: Jdbi) {
 
     private lateinit var ops: ExampleDaoOps

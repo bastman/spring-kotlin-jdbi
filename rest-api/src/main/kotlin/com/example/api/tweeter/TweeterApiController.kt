@@ -2,9 +2,11 @@ package com.example.api.tweeter
 
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RestController
 import java.time.Instant
 import java.util.*
 
+@RestController
 class TweeterApiController(val dao:ExampleDao) {
 
     /*
