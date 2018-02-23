@@ -86,19 +86,17 @@ dependencies {
     // postgres
     compile "org.postgresql:postgresql:${postgresDriverVersion}"
 
+    // h2 db
+    //runtime group: 'com.h2database', name: 'h2', version: '1.4.196'
+
     // jdbi
     //compile "org.jdbi:jdbi:${jdbiVersion}"
 
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
-    // https://mvnrepository.com/artifact/org.jdbi/jdbi3-spring
     compile group: 'org.jdbi', name: 'jdbi3-spring', version: '3.0.0-alpha7'
-// https://mvnrepository.com/artifact/org.jdbi/jdbi3-jpa
     compile group: 'org.jdbi', name: 'jdbi3-jpa', version: '3.0.1'
-// https://mvnrepository.com/artifact/org.jdbi/jdbi3-postgres
     compile group: 'org.jdbi', name: 'jdbi3-postgres', version: '3.0.1'
-// https://mvnrepository.com/artifact/org.jdbi/jdbi3-kotlin
     compile group: 'org.jdbi', name: 'jdbi3-kotlin', version: '3.0.1'
-// https://mvnrepository.com/artifact/org.jdbi/jdbi3-kotlin-sqlobject
     compile group: 'org.jdbi', name: 'jdbi3-kotlin-sqlobject', version: '3.0.1'
 
 }

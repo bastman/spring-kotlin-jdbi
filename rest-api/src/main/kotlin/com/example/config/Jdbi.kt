@@ -15,9 +15,53 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 import javax.sql.DataSource;
+import org.springframework.transaction.PlatformTransactionManager
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder
+import org.springframework.transaction.annotation.EnableTransactionManagement
+import org.springframework.jdbc.datasource.DriverManagerDataSource
+
+
+
 
 @Configuration
-class JdbiConfig {
+@EnableTransactionManagement
+class JdbiConfig(private val dataSource: DataSource) {
+
+    @Bean
+    fun jdbi(): Jdbi {
+        return Jdbi.create(dataSource)
+    }
+
+    @Bean
+    fun jdbiFactory(): JdbiFactoryBean {
+        return JdbiFactoryBean()
+                //.setDataSource(DriverManagerDataSource())
+                .setDataSource(dataSource)
+    }
+
+    /*
+    @Bean
+    fun jdbiOperations(jdbi: Jdbi): JdbiOperations {
+        return JdbiTemplate(jdbi)
+    }
+
+    @Bean
+    fun transactionManager(jdbi: Jdbi): PlatformTransactionManager {
+        return JdbiTransactionManager(jdbi)
+    }
+
+    @Bean
+    fun templateUsingService(operations: JdbiOperations): TemplateUsingService {
+        return TemplateUsingService(operations)
+    }
+
+
+    @Bean
+    fun userDao(jdbi: Jdbi): UserDao {
+        return jdbi.onDemand(UserDao::class.java!!)
+    }
+    */
 
 
     /*
@@ -35,6 +79,7 @@ class JdbiConfig {
     */
 
 
+    /*
     @Autowired
     @Bean
     fun dbiFactory(ds: DataSource): JdbiFactoryBean {
@@ -42,10 +87,7 @@ class JdbiConfig {
         dbiFactoryBean.setDataSource(ds)
         return dbiFactoryBean
     }
+    */
 
-    @Bean
-    @ConfigurationProperties(prefix = "spring.datasource")
-    fun dataSource(): DataSource {
-        return DataSourceBuilder.create().build()
-    }
+
 }
