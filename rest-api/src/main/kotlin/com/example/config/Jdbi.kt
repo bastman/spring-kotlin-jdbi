@@ -22,18 +22,20 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 import org.springframework.jdbc.datasource.DriverManagerDataSource
 
 
-
-
 @Configuration
 @EnableTransactionManagement
 class JdbiConfig(private val dataSource: DataSource) {
 
     @Bean
-    fun jdbi(): Jdbi {
-        return Jdbi.create(dataSource).installPlugins()
-    }
+    fun jdbi(): Jdbi = Jdbi.create(dataSource).installPlugins()
 
     /*
+
+    @Bean
+    fun userDao(jdbi: Jdbi): UserDao {
+        return jdbi.onDemand(UserDao::class.java!!)
+    }
+
     @Bean
     fun jdbiFactory(): JdbiFactoryBean {
         return JdbiFactoryBean()
@@ -59,10 +61,7 @@ class JdbiConfig(private val dataSource: DataSource) {
     }
 
 
-    @Bean
-    fun userDao(jdbi: Jdbi): UserDao {
-        return jdbi.onDemand(UserDao::class.java!!)
-    }
+
     */
 
 
