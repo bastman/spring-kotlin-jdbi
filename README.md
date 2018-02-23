@@ -4,6 +4,7 @@ playground for spring-boot, kotlin , jdbi
 ## status
 
  - under development
+ - current issue: org.jdbi.v3.core.extension.NoSuchExtensionException: Extension not found: interface com.example.api.tweeter.ExampleDaoOps
 
 ## build
 
