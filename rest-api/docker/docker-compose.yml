@@ -1,13 +1,20 @@
 version: '3'
 services:
+  spring-kotlin-jdbi-web-local:
+    image: local/spring-kotlin-jdbi-rest-api:${SERVICE_VERSION}
+    ports:
+      - "8080:8080"
+    environment:
+      - "APP_DB_URL=spring-kotlin-jdbi-db-local:5432/app"
+    command: ["java","-jar","-Dspring.profiles.active=local", "-Xms32m", "-Xmx512m", "/opt/app/app.jar"]
+    depends_on:
+      - spring-kotlin-jdbi-db-local
   spring-kotlin-jdbi-db-local:
     image: local/spring-kotlin-jdbi-db:latest
     ports:
       - "5432:5432"
-    tmpfs:
-      - /tmp
-      - /var/run/postgresql
-      - /var/lib/postgresql/data
+    volumes:
+      - spring-kotlin-jdbi-db-local-volume:/var/lib/postgresql/data
   spring-kotlin-jdbi-db-ci:
     image: local/spring-kotlin-jdbi-db:latest
     ports:
@@ -17,3 +24,6 @@ services:
       - /tmp
       - /var/run/postgresql
       - /var/lib/postgresql/data
+
+volumes:
+  spring-kotlin-jdbi-db-local-volume: {}

@@ -4,7 +4,15 @@ playground for spring-boot, kotlin , jdbi
 ## status
 
  - under development
- - current issue: 
+ 
+## build and run playground (docker)
+```
+    $ make -C rest-api app.compose.up
+
+```
+
+- browse to: http://localhost:8080/swagger-ui.html
+
 
 ## build
 
@@ -19,6 +27,17 @@ playground for spring-boot, kotlin , jdbi
     $ make -C rest-api db.local.up
 
 ```
+
+## run from Intellij
+
+    VM options: -Dspring.profiles.active=local
+    Environment variables: APP_DB_URL=localhost:5432/app
+    
+  ```
+      # make sure, you have our db running on that port, e.g.:
+      $ make -C rest-api db.local.up
+  
+  ```  
 
 ## This example project is based on ...
 - https://github.com/making/spring-boot-db-samples

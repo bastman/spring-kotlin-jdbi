@@ -61,10 +61,11 @@ app.build: app.clean app.version guard-SERVICE_VERSION db.build
 	export SERVICE_VERSION=$(SERVICE_VERSION) && docker-compose -f $(DOCKER_COMPOSE_FILE) down -v
 	@echo "build complete: service $(SERVICE_NAME) version $(SERVICE_VERSION)"
 
-
-app.compose.up: guard-SERVICE_VERSION
+app.compose.start: guard-SERVICE_VERSION
 	docker ps
 	export SERVICE_VERSION=$(SERVICE_VERSION) && export SERVICE_NAME=$(SERVICE_NAME) && docker-compose -f $(DOCKER_COMPOSE_FILE) up
+
+app.compose.up: app.build app.compose.start
 
 app.compose.down: guard-SERVICE_VERSION
 	docker ps
