@@ -22,13 +22,22 @@ data class Tweet(
 
 interface TweetDaoOps {
     @SqlUpdate("""
-        insert into $TABLE_TWEET
+        INSERT INTO $TABLE_TWEET
         (id, version, created_at, updated_at, message, comment)
-        values
+        VALUES
         (:tweet.id, :tweet.version, :tweet.createdAt, :tweet.modifiedAt, :tweet.message, :tweet.comment)
         """
     )
-    fun create(tweet: Tweet): Number
+    fun insert(tweet: Tweet): Number
+
+    @SqlUpdate("""
+        UPDATE $TABLE_TWEET
+        SET (updated_at, message, comment)
+        = (:modifiedAt, :message, :comment)
+        WHERE id = :id
+        """
+    )
+    fun update(id:UUID, modifiedAt: Instant,message: String, comment: String?): Number
 
     @SqlQuery("SELECT * FROM $TABLE_TWEET WHERE id = :id")
     operator fun get(@Bind("id") id: UUID): Tweet?
@@ -49,8 +58,8 @@ interface TweetDaoOps {
 class TweetDao(jdbi: Jdbi) {
     private val ops: TweetDaoOps = jdbi.onDemand(TweetDaoOps::class.java)
 
-    fun create(tweet: Tweet): Tweet {
-        ops.create(tweet)
+    fun insert(tweet: Tweet): Tweet {
+        ops.insert(tweet)
         return ops[tweet.id] ?: throw DaoAccessException("Failed to load entity after insert. (Tweet.id=${tweet.id}")
     }
 
@@ -58,4 +67,11 @@ class TweetDao(jdbi: Jdbi) {
     fun requireOneById(id: UUID): Tweet = ops[id] ?: throw EntityNotFoundException("Tweet Not Found (id=$id)")
     fun findAll() = ops.findAll()
     fun findByIdList(ids: List<UUID>) = ops.findByIdList(ids)
+
+    fun update(cmd:UpdateCommand):Tweet {
+        ops.update(id=cmd.id, modifiedAt = cmd.modifiedAt, message = cmd.message, comment = cmd.comment)
+        return ops[cmd.id] ?: throw DaoAccessException("Failed to load entity after insert. (Tweet.id=${cmd.id}")
+    }
 }
+
+data class UpdateCommand(val id:UUID, val message:String, val comment: String?, val modifiedAt: Instant)
