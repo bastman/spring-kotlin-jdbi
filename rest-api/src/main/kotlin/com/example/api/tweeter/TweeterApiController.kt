@@ -15,7 +15,7 @@ class TweeterApiController(private val dao: TweetDao) {
             dao.findAll().map { it.toTweetDto() }
 
     @PostMapping("/api/tweeter/find-by-ids")
-    fun findByIdList(@RequestBody req:FindByIdsRequest): List<TweetDto> =
+    fun findByIdList(@RequestBody req: FindByIdsRequest): List<TweetDto> =
             dao.findByIdList(req.ids).map { it.toTweetDto() }
 
     @GetMapping("/api/tweeter/{id}")
@@ -30,16 +30,17 @@ class TweeterApiController(private val dao: TweetDao) {
         )
         return dao.insert(tweet).toTweetDto()
     }
+
     @PostMapping("/api/tweeter/{id}")
     fun updateOne(@PathVariable id: UUID, @RequestBody req: UpdateTweetRequest): TweetDto {
-        val cmd = UpdateCommand(id=id, modifiedAt = Instant.now(), message = req.message, comment = req.comment)
+        val cmd = UpdateCommand(id = id, modifiedAt = Instant.now(), message = req.message, comment = req.comment)
         return dao.update(cmd).toTweetDto()
     }
 }
 
 data class CreateTweetRequest(val message: String, val comment: String?)
 data class UpdateTweetRequest(val message: String, val comment: String?)
-data class FindByIdsRequest(val ids:List<UUID>)
+data class FindByIdsRequest(val ids: List<UUID>)
 data class TweetDto(
         val id: UUID, val version: Int, val createdAt: Instant, val modifiedAt: Instant,
         val message: String, val comment: String?

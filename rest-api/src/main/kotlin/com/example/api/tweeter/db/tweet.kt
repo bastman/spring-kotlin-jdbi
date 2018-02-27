@@ -34,10 +34,13 @@ interface TweetDaoOps {
         UPDATE $TABLE_TWEET
         SET (updated_at, message, comment)
         = (:modifiedAt, :message, :comment)
-        WHERE id = :id
+        WHERE id = :id AND updated_at = :optimisticModifiedAt
         """
     )
-    fun update(id:UUID, modifiedAt: Instant,message: String, comment: String?): Number
+    fun update(
+            id: UUID, optimisticModifiedAt: Instant,
+            modifiedAt: Instant, message: String, comment: String?
+    ): Int
 
     @SqlQuery("SELECT * FROM $TABLE_TWEET WHERE id = :id")
     operator fun get(@Bind("id") id: UUID): Tweet?
@@ -46,10 +49,10 @@ interface TweetDaoOps {
     fun findAll(): List<Tweet>
 
     @SqlQuery("SELECT * FROM $TABLE_TWEET where id = any(:ids) order by id")
-    fun findByIdList(ids:List<UUID>): List<Tweet>
+    fun findByIdList(ids: List<UUID>): List<Tweet>
 
     companion object {
-        const val TABLE_TWEET:String="tweet"
+        const val TABLE_TWEET: String = "tweet"
     }
 }
 
@@ -68,10 +71,17 @@ class TweetDao(jdbi: Jdbi) {
     fun findAll() = ops.findAll()
     fun findByIdList(ids: List<UUID>) = ops.findByIdList(ids)
 
-    fun update(cmd:UpdateCommand):Tweet {
-        ops.update(id=cmd.id, modifiedAt = cmd.modifiedAt, message = cmd.message, comment = cmd.comment)
+    fun update(cmd: UpdateCommand): Tweet {
+        val oldRow = requireOneById(id = cmd.id)
+        val affectedRows = ops.update(
+                id = cmd.id, optimisticModifiedAt = oldRow.modifiedAt,
+                modifiedAt = cmd.modifiedAt, message = cmd.message, comment = cmd.comment
+        )
+        if (affectedRows < 1) {
+            throw DaoAccessException("Update Entity Failed! reason: OptimisticLockingError. (Tweet.id=${cmd.id}")
+        }
         return ops[cmd.id] ?: throw DaoAccessException("Failed to load entity after insert. (Tweet.id=${cmd.id}")
     }
 }
 
-data class UpdateCommand(val id:UUID, val message:String, val comment: String?, val modifiedAt: Instant)
+data class UpdateCommand(val id: UUID, val message: String, val comment: String?, val modifiedAt: Instant)
